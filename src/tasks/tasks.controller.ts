@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
   Param,
   Query,
@@ -34,5 +35,10 @@ export class TasksController {
   @UsePipes(ValidationPipe)
   createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     return this.tasksService.createTask(createTaskDto);
+  }
+
+  @Delete('/:id')
+  deleteTask(@Param('id', ParseIntPipe) id: number): Promise<string> {
+    return this.tasksService.deleteTask(id);
   }
 }

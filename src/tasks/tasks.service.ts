@@ -26,4 +26,12 @@ export class TasksService {
   createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.taskRepository.createTask(createTaskDto);
   }
+
+  async deleteTask(id: number): Promise<string> {
+    const deleted = await this.taskRepository.delete(id);
+    if (!deleted.affected) {
+      throw new NotFoundException(`This task doesn't exist`);
+    }
+    return 'Task was deleted successfully!';
+  }
 }
