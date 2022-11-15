@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Delete,
+  Patch,
   Body,
   Param,
   Query,
@@ -13,6 +14,8 @@ import {
 import { TasksService } from './tasks.service';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
+import { TaskStatus } from './enums/task-status.enum';
 import { Task } from './entities/task.entity';
 
 @Controller('tasks')
@@ -40,5 +43,13 @@ export class TasksController {
   @Delete('/:id')
   deleteTask(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.tasksService.deleteTask(id);
+  }
+
+  @Patch('/:id/status')
+  updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+  ): Promise<Task> {
+    return this.tasksService.updateStatus(id, status);
   }
 }

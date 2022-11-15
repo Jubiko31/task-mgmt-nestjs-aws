@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskRepository } from './repository/task.repository';
+import { TaskStatus } from './enums/task-status.enum';
 import { Task } from './entities/task.entity';
 @Injectable()
 export class TasksService {
@@ -33,5 +34,13 @@ export class TasksService {
       throw new NotFoundException(`This task doesn't exist`);
     }
     return 'Task was deleted successfully!';
+  }
+
+  async updateStatus(id: number, status: TaskStatus): Promise<Task> {
+    const updated = await this.getTaskById(id);
+    updated.status = status;
+    await updated.save();
+
+    return updated;
   }
 }
