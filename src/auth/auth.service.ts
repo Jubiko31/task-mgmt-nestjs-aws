@@ -10,11 +10,7 @@ export class AuthService {
     private userRepository: UserRepository,
   ) {}
 
-  signUp(authCredentialsDto: AuthCredentialsDto): string {
-    const res = this.userRepository.signUp(authCredentialsDto);
-
-    return res
-      ? 'User account created successfully!'
-      : 'Error while creating new account';
+  signUp(authCredentialsDto: AuthCredentialsDto): Promise<string> {
+    return this.userRepository.signUp(authCredentialsDto);
   }
 }
