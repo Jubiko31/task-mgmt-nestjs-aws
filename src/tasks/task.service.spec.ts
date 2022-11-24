@@ -10,6 +10,7 @@ const mockUser = { id: 12, username: 'Jon Snow' };
 const mockTaskRepository = () => ({
   getTasks: jest.fn(),
   findOne: jest.fn(),
+  createTask: jest.fn(),
 });
 
 describe('TasksService', () => {
@@ -62,6 +63,20 @@ describe('TasksService', () => {
       expect(tasksService.getTaskById(1, mockUser)).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('createTask', () => {
+    it('creates a new task with user ownership', async () => {
+      taskRepository.createTask.mockResolvedValue('test task');
+      expect(taskRepository.createTask).not.toHaveBeenCalled();
+      const createTaskDto = {
+        title: 'test create',
+        description: 'created test',
+      };
+      const res = await tasksService.createTask(createTaskDto, mockUser);
+      expect(taskRepository.createTask).toHaveBeenCalledWith(createTaskDto);
+      expect(res).toEqual('test task');
     });
   });
 });
