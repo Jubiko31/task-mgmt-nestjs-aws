@@ -5,6 +5,7 @@ import {
 import { Test } from '@nestjs/testing';
 import { Users } from './entities/users.entity';
 import { UserRepository } from './repository/user.repository';
+import * as bcrypt from 'bcrypt';
 
 const mockCredentialsDto = {
   username: 'TestUsername',
@@ -75,6 +76,17 @@ describe('UserRepository', () => {
       const res = await userRepository.validateUserPassword(mockCredentialsDto);
       expect(user.validatePassword).toHaveBeenCalled();
       expect(res).toBeNull();
+    });
+  });
+
+  describe('hashPassword', () => {
+    it('calls bcrypt.hash method to generate a hash for password', async () => {
+      bcrypt.hash = jest.fn().mockResolvedValue('testHash');
+      expect(bcrypt.hash).not.toHaveBeenCalled();
+
+      const res = await userRepository.hashPassword('testPassword', 'testSalt');
+      expect(bcrypt.hash).toHaveBeenCalled();
+      expect(res).toEqual('testHash');
     });
   });
 });
